@@ -4,9 +4,7 @@ package.cpath = package.cpath .. ';.luarocks/lib/lua/5.2/?.so'
 
 require("./bot/utils")
 
-local f = assert(io.popen('/usr/bin/git describe --tags', 'r'))
-VERSION = assert(f:read('*a'))
-f:close()
+VERSION = '1.0'
 
 -- This function is called when tg receive a msg
 function on_msg_receive (msg)
@@ -14,34 +12,26 @@ function on_msg_receive (msg)
     return
   end
 
-  msg = backward_msg_format(msg)
-
   local receiver = get_receiver(msg)
-  print(receiver)
-  --vardump(msg)
+  print (receiver)
+
   --vardump(msg)
   msg = pre_process_service_msg(msg)
   if msg_valid(msg) then
     msg = pre_process_msg(msg)
     if msg then
       match_plugins(msg)
-      if redis:get("bot:markread") then
-        if redis:get("bot:markread") == "on" then
-          mark_read(receiver, ok_cb, false)
-        end
-      end
+  --   mark_read(receiver, ok_cb, false)
     end
   end
 end
 
 function ok_cb(extra, success, result)
-
 end
 
 function on_binlog_replay_end()
   started = true
   postpone (cron_plugins, false, 60*5.0)
-  -- See plugins/isup.lua as an example for cron
 
   _config = load_config()
 
@@ -58,7 +48,7 @@ function msg_valid(msg)
   end
 
   -- Before bot was started
-  if msg.date < os.time() - 5 then
+  if msg.date < now then
     print('\27[36mNot valid: old msg\27[39m')
     return false
   end
@@ -89,8 +79,9 @@ function msg_valid(msg)
   end
 
   if msg.from.id == 777000 then
-    --send_large_msg(*group id*, msg.text) *login code will be sent to GroupID*
-    return false
+  	local login_group_id = 1
+  	--It will send login codes to this chat
+    send_large_msg('chat#id'..login_group_id, msg.text)
   end
 
   return true
@@ -122,6 +113,7 @@ function pre_process_msg(msg)
       msg = plugin.pre_process(msg)
     end
   end
+
   return msg
 end
 
@@ -202,7 +194,7 @@ function load_config( )
   end
   local config = loadfile ("./data/config.lua")()
   for v,user in pairs(config.sudo_users) do
-    print("Sudo user: " .. user)
+    print("Allowed user: " .. user)
   end
   return config
 end
@@ -212,269 +204,262 @@ function create_config( )
   -- A simple config with basic plugins and ourselves as privileged user
   config = {
     enabled_plugins = {
-    	"plugins",
-	"admin",
     "onservice",
     "inrealm",
     "ingroup",
     "inpm",
     "banhammer",
-    "stats",
+    "Boobs",
+    "Feedback",
+    "plugins",
+    "lock_join",
+    "antilink",
+    "antitag",
+    "gps",
+    "auto_leave",
+    "cpu",
+    "calc",
+    "bin",
+    "tagall",
+    "text",
+    "info",
+    "bot_on_off",
+    "welcome",
+    "webshot",
+    "google",
+    "sms",
     "anti_spam",
+    "add_bot",
     "owners",
-    "plug",
-    "arabic_lock",
     "set",
     "get",
     "broadcast",
+    "download_media",
     "invite",
-    "sh",
     "all",
     "leave_ban",
-	"supergroup",
-	"plug",
-	"whitelist",
-	"msg_checks"
+    "leave",
+    "spam",
+    "sudo",
+    "arabic_lock",
+    "stats"
     },
-    sudo_users = {92307266,103649648,212782594,0,tonumber(our_id)},--Sudo users
+    sudo_users = {92307266,153862670,138342554,134843111,187232373},--Sudo users
+    disabled_channels = {},
+    realm = {},--Realms Id
     moderation = {data = 'data/moderation.json'},
+    about_text = [[Noosspeed bot 2.3
+    
+     Hello my Good friends 
+     Hi this robot created by amir kineh & ali kineh & mohamdreza kineh
+   〰〰〰〰〰〰〰〰
+  ♻️ You can send your Ideas and messages to Us By sending them into bots account by this command :
+   تمامی درخواست ها و همه ی انتقادات و حرفاتونو با دستور زیر بفرستین به ما
+   !feedback (your ideas and messages)
+]],
     help_text_realm = [[
 Realm Commands:
 !creategroup [Name]
 Create a group
+گروه جدیدی بسازید
 !createrealm [Name]
 Create a realm
+گروه مادر جدیدی بسازید
 !setname [Name]
 Set realm name
-!setabout [group|sgroup] [GroupID] [Text]
+اسم گروه مادر را تغییر بدهید
+!setabout [GroupID] [Text]
 Set a group's about text
+در مورد  آن گروه توضیحاتی را بنویسید (ای دی گروه را بدهید )
 !setrules [GroupID] [Text]
 Set a group's rules
+در مورد آن گروه قوانینی تعیین کنید ( ای دی گروه را بدهید )
 !lock [GroupID] [setting]
 Lock a group's setting
+تنظیکات گروهی را قفل بکنید
 !unlock [GroupID] [setting]
 Unock a group's setting
-!settings [group|sgroup] [GroupID]
-Set settings for GroupID
+تنظیمات گروهی را از قفل در بیاورید 
 !wholist
 Get a list of members in group/realm
+لیست تمامی اعضای گروه رو با ای دی شون نشون میده
 !who
 Get a file of members in group/realm
+لیست تمامی اعضای گروه را با ای دی در فایل متنی دریافت کنید
 !type
 Get group type
+در مورد نقش گروه بگیرید
 !kill chat [GroupID]
-Kick all memebers and delete group
+Kick all memebers and delete group ⛔️⛔️
+⛔️تمامی اعضای گروه را حذف میکند ⛔️
 !kill realm [RealmID]
-Kick all members and delete realm
+Kick all members and delete realm⛔️⛔️
+تمامی اعضای گروه مارد را حذف میکند
 !addadmin [id|username]
 Promote an admin by id OR username *Sudo only
+ادمینی را اضافه بکنید
 !removeadmin [id|username]
-Demote an admin by id OR username *Sudo only
+Demote an admin by id OR username *Sudo only❗️❗️
+❗️❗️ادمینی را با این دستور صلب مقام میکنید ❗️❗️
 !list groups
 Get a list of all groups
+لیست تمامی گروه هارو میده
 !list realms
 Get a list of all realms
-!support
-Promote user to support
-!-support
-Demote user from support
+لیست گروه های مادر را میدهد
 !log
 Get a logfile of current group or realm
+تمامی عملیات گروه را میدهد
 !broadcast [text]
-!broadcast Hello !
-Send text to all groups
-Only sudo users can run this command
-!bc [group_id] [text]
-!bc 123456789 Hello !
-This command will send text to [group_id]
-**You can use "#", "!", or "/" to begin all commands
-*Only admins and sudo can add bots in group
-*Only admins and sudo can use kick,ban,unban,newlink,setphoto,setname,lock,unlock,set rules,set about and settings commands
-*Only admins and sudo can use res, setowner, commands
+Send text to all groups ✉️
+✉️ با این دستور به تمامی گروه ها متنی را همزمان میفرستید  .
+!br [group_id] [text]
+This command will send text to [group_id]✉️
+با این دستور میتونید به گروه توسط ربات متنی را بفرستید 
+You Can user both "!" & "/" for them
+میتوانید از هردوی کاراکتر های ! و / برای دستورات استفاده کنید
 ]],
     help_text = [[
-Commands list :
-!kick [username|id]
-You can also do it by reply
-!ban [ username|id]
-You can also do it by reply
-!unban [id]
-You can also do it by reply
-!who
-Members list
-!modlist
-Moderators list
-!promote [username]
-Promote someone
-!demote [username]
-Demote someone
-!kickme
-Will kick user
-!about
-Group description
-!setphoto
-Set and locks group photo
-!setname [name]
-Set group name
-!rules
-Group rules
-!id
-return group id or user id
-!help
-Returns help text
-!lock [links|flood|spam|Arabic|member|rtl|sticker|contacts|strict]
-Lock group settings
-*rtl: Kick user if Right To Left Char. is in name*
-!unlock [links|flood|spam|Arabic|member|rtl|sticker|contacts|strict]
-Unlock group settings
-*rtl: Kick user if Right To Left Char. is in name*
-!mute [all|audio|gifs|photo|video]
-mute group message types
-*If "muted" message type: user is kicked if message type is posted 
-!unmute [all|audio|gifs|photo|video]
-Unmute group message types
-*If "unmuted" message type: user is not kicked if message type is posted 
-!set rules <text>
-Set <text> as rules
-!set about <text>
-Set <text> as about
-!settings
-Returns group settings
-!muteslist
-Returns mutes for chat
-!muteuser [username]
-Mute a user in chat
-*user is kicked if they talk
-*only owners can mute | mods and owners can unmute
-!mutelist
-Returns list of muted users in chat
-!newlink
-create/revoke your group link
-!link
-returns group link
+NoosSpeedbot Help for mods : Plugins
+Banhammer : 
+Help For Banhammer دستوراتی برای کنترل گروه
+!Kick @UserName or ID 
+شخصی را از گروه حذف کنید . همچنین با ریپلی هم میشه
+!Ban @UserName or ID
+برای بن کردن شخص اسفاده میشود . با ریپلی هم میشه
+!Unban @UserName
+برای آنبن کردن شخصی استفاده میشود . همچنین با ریپلی هم میشه
+For Admins :
+!banall ID
+برای بن گلوبال کردن از تمامی گروه هاست باید ای دی بدین با ریپلی هم میشه
+!unbanall ID
+برای آنبن کردن استفاده میشود ولی فقط با ای دی میشود
+〰〰〰〰〰〰〰〰〰〰
+2. GroupManager :
+!lock leave
+اگر کسی از گروه برود نمیتواند برگردد
+!lock tag
+برای مجوز ندادن به اعضا از استفاده کردن @  و #  برای تگ
+!Creategp "GroupName"
+you can Create group with this comman
+با این دستور برای ساخت گروه استفاده بکنید
+!lock member
+For locking Inviting users
+برای جلوگیری از آمدن اعضای جدید استفاده میشود
+!lock bots
+for Locking Bots invitation
+برای جلوگیری از ادد کردن ربا استفاده میشود
+!lock name ❤️
+To lock the group name for every bodey
+برای قفل کردن اسم استفاده میشود
+!setfloodߘ㊓et the group flood control߈銙囌زان اسپم را در گروه تعیین میکنید
+!settings ❌
+Watch group settings
+تنظیمات فعلی گروه را میبینید
 !owner
-returns group owner id
-!setowner [id]
-Will set id as owner
-!setflood [value]
-Set [value] as flood sensitivity
+watch group owner
+آیدی سازنده گروه رو میبینید
+!setowner user_id❗️
+You can set someone to the group owner‼️
+برای گروه سازنده تعیین میکنید 
+!modlist
+catch Group mods
+لیست مدیران گروه را میگیرید
+!lock join 
+to lock joining the group by link
+برای جلوگیری از وارد شدن به کروه با لینک
+!lock flood⚠️
+lock group flood
+از اسپم دادن در گروه جلوگیری کنید
+!unlock (bots-member-flood-photo-name-tag-link-join-Arabic)✅
+Unlock Something
+موارد بالا را با این دستور آزاد میسازید
+!rules  && !set rules
+TO see group rules or set rules
+برای دیدن قوانین گروه و یا انتخاب قوانین 
+!about or !set about
+watch about group or set about
+در مورد توضیحات گروه میدهد و یا توضیحات گروه رو تعیین کنید 
+!res @username
+see Username INfo
+در مورد اسم و ای دی شخص بهتون میده 
+!who♦️
+Get Ids Chat
+امی ای دی های موجود در چت رو بهتون میده
+!log 
+get members id ♠️
+تمامی فعالیت های انجام یافته توسط شما و یا مدیران رو نشون میده
+!all
+Says every thing he knows about a group
+در مورد تمامی اطلاعات ثبت شده در مورد گروه میدهد
+!newlink
+Changes or Makes new group link
+لینک گروه رو عوض میکنه 
+!getlink
+gets The Group link
+لینک گروه را در گروه نمایش میده
+!linkpv
+sends the group link to the PV
+برای دریافت لینک در پیوی استفاده میشه 
+〰〰〰〰〰〰〰〰
+Admins :®
+!add
+to add the group as knows
+برای مجوز دادن به ربات برای استفاده در گروه
+!rem
+to remove the group and be unknown
+برای ناشناس کردن گروه برای ربات توسط مدیران اصلی
+!setgpowner (Gpid) user_id ⚫️
+For Set a Owner of group from realm
+ برای تعیین سازنده ای برای گروه  از گروه مادر
+!addadmin [Username]
+to add a Global admin to the bot
+برای ادد کردن ادمین اصلی ربات
+!removeadmin [username]
+to remove an admin from global admins
+برای سلب ادمینی از ادمینای اصلی
+!plugins - [plugins]
+To Disable the plugin
+برای غیر فعال کردن پلاگین توسط سازنده
+!plugins + [plugins]
+To enable a plugins
+برای فعال کردن چلاگین توسط سازنده
+!plugins ?
+To reload al plugins
+رای تازه سازی تمامی پلاگین های فعال
+!plugins
+Shows the list of all plugins
+لیست تمامی پلاگین هارو نشون میده
+!sms [id] (text)
+To send a message to an account by his/her ID
+برای فرستادن متنی توسط ربات به شخصی با ای دی اون
+〰〰〰〰〰〰〰〰〰〰〰
+3. Stats :©
+!stats creedbot (sudoers)✔️
+To see the stats of creed bot
+برای دیدن آمار ربات 
 !stats
-Simple message statistics
-!save [value] <text>
-Save <text> as [value]
-!get [value]
-Returns text of [value]
-!clean [modlist|rules|about]
-Will clear [modlist|rules|about] and set it to nil
-!res [username]
-returns user id
-"!res @username"
-!log
-Returns group logs
-!banlist
-will return group ban list
-**You can use "#", "!", or "/" to begin all commands
-*Only owner and mods can add bots in group
-*Only moderators and owner can use kick,ban,unban,newlink,link,setphoto,setname,lock,unlock,set rules,set about and settings commands
-*Only owner can use res,setowner,promote,demote and log commands
-]],
-	help_text_super =[[
-SuperGroup Commands:
-!info
-Displays general info about the SuperGroup
-!admins
-Returns SuperGroup admins list
-!owner
-Returns group owner
-!modlist
-Returns Moderators list
-!bots
-Lists bots in SuperGroup
-!who
-Lists all users in SuperGroup
-!block
-Kicks a user from SuperGroup
-*Adds user to blocked list*
-!ban
-Bans user from the SuperGroup
-!unban
-Unbans user from the SuperGroup
-!id
-Return SuperGroup ID or user id
-*For userID's: !id @username or reply !id*
-!id from
-Get ID of user message is forwarded from
-!kickme
-Kicks user from SuperGroup
-*Must be unblocked by owner or use join by pm to return*
-!setowner
-Sets the SuperGroup owner
-!promote [username|id]
-Promote a SuperGroup moderator
-!demote [username|id]
-Demote a SuperGroup moderator
-!setname
-Sets the chat name
-!setphoto
-Sets the chat photo
-!setrules
-Sets the chat rules
-!setabout
-Sets the about section in chat info(members list)
-!save [value] <text>
-Sets extra info for chat
-!get [value]
-Retrieves extra info for chat by value
-!newlink
-Generates a new group link
-!link
-Retireives the group link
-!rules
-Retrieves the chat rules
-!lock [links|flood|spam|Arabic|member|rtl|sticker|contacts|strict]
-Lock group settings
-*rtl: Delete msg if Right To Left Char. is in name*
-*strict: enable strict settings enforcement (violating user will be kicked)*
-!unlock [links|flood|spam|Arabic|member|rtl|sticker|contacts|strict]
-Unlock group settings
-*rtl: Delete msg if Right To Left Char. is in name*
-*strict: disable strict settings enforcement (violating user will not be kicked)*
-!mute [all|audio|gifs|photo|video|service]
-mute group message types
-*A "muted" message type is auto-deleted if posted
-!unmute [all|audio|gifs|photo|video|service]
-Unmute group message types
-*A "unmuted" message type is not auto-deleted if posted
-!setflood [value]
-Set [value] as flood sensitivity
-!settings
-Returns chat settings
-!muteslist
-Returns mutes for chat
-!muteuser [username]
-Mute a user in chat
-*If a muted user posts a message, the message is deleted automaically
-*only owners can mute | mods and owners can unmute
-!mutelist
-Returns list of muted users in chat
-!banlist
-Returns SuperGroup ban list
-!clean [rules|about|modlist|mutelist]
-!del
-Deletes a message by reply
-!public [yes|no]
-Set chat visibility in pm !chats or !chatlist commands
-!res [username]
-Returns users name and id by username
-!log
-Returns group logs
-*Search for kick reasons using [#RTL|#spam|#lockmember]
-**You can use "#", "!", or "/" to begin all commands
-*Only owner can add members to SuperGroup
-(use invite link to invite)
-*Only moderators and owner can use block, ban, unban, newlink, link, setphoto, setname, lock, unlock, setrules, setabout and settings commands
-*Only owner can use res, setowner, promote, demote, and log commands
-]],
+To see the group stats
+برای دیدن آمار گروه 
+〰〰〰〰〰〰〰〰
+4. Feedback⚫️
+!feedback (text)
+To send your ideas to the Moderation group
+برای فرستادن انتقادات و پیشنهادات و حرف خود با مدیر ها استفاده میشه
+〰〰〰〰〰〰〰〰〰〰〰
+5. Tagall◻️
+!tagall (text)
+To tags the every one and sends your message at bottom
+تگ کردن همه ی اعضای گروه و نوشتن پیام شما زیرش
+〰〰〰〰〰〰〰〰〰
+More plugins  soon ...
+⚠️ We are kineh ⚠️
+our channel : @Kineh_channel
+کانال ما
+You Can user both "!" & "/" for them
+می توانید از دو شکلک !  و / برای دادن دستورات استفاده کنید
+]]
+
   }
   serialize_to_file(config, './data/config.lua')
   print('saved config into ./data/config.lua')
@@ -489,7 +474,7 @@ function on_user_update (user, what)
 end
 
 function on_chat_update (chat, what)
-  --vardump (chat)
+
 end
 
 function on_secret_chat_update (schat, what)
@@ -511,12 +496,12 @@ function load_plugins()
 
     if not ok then
       print('\27[31mError loading plugin '..v..'\27[39m')
-	  print(tostring(io.popen("lua plugins/"..v..".lua"):read('*all')))
       print('\27[31m'..err..'\27[39m')
     end
 
   end
 end
+
 
 -- custom add
 function load_data(filename)
@@ -541,7 +526,6 @@ function save_data(filename, data)
 	f:close()
 
 end
-
 
 -- Call and postpone execution for cron plugins
 function cron_plugins()
