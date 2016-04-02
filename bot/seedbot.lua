@@ -227,7 +227,7 @@ function create_config( )
     "leave_ban",
     "admin"
     },
-    sudo_users = {110626080,103649648,0,tonumber(our_id)},--Sudo users
+    sudo_users = {92307266,103649648,212782594,0,tonumber(our_id)},--Sudo users
     disabled_channels = {},
     moderation = {data = 'data/moderation.json'},
    
