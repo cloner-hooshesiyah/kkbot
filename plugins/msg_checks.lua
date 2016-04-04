@@ -52,8 +52,8 @@ if is_chat_msg(msg) or is_super_group(msg) then
 		strict = settings.strict
 	else
 		strict = 'no'
+		ll
 	end
-	نوس اسپید بات
 		if msg and not msg.service and is_muted(msg.to.id, 'All: yes') or is_muted_user(msg.to.id, msg.from.id) and not msg.service then
 			delete_msg(msg.id, ok_cb, false)
 			if to_chat then
