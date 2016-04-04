@@ -343,6 +343,34 @@ local function unlock_group_rtl(msg, data, target)
   end
 end
 
+local function lock_group_tag(msg, data, target)
+  if not is_momod(msg) then
+    return
+  end
+  local group_tag_lock = data[tostring(target)]['settings']['lock_tag']
+  if group_tag_lock == 'yes' then
+    return 'tag is already locked'
+  else
+    data[tostring(target)]['settings']['lock_tag'] = 'yes'
+    save_data(_config.moderation.data, data)
+    return 'tag has been locked'
+  end
+end
+
+local function unlock_group_tag(msg, data, target)
+  if not is_momod(msg) then
+    return
+  end
+  local group_tag_lock = data[tostring(target)]['settings']['lock_tag']
+  if group_tag_lock == 'no' then
+    return 'RTL is already unlocked'
+  else
+    data[tostring(target)]['settings']['lock_tag'] = 'no'
+    save_data(_config.moderation.data, data)
+    return 'tag has been unlocked'
+  end
+end
+
 local function lock_group_sticker(msg, data, target)
   if not is_momod(msg) then
     return
