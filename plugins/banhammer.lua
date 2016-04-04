@@ -6,14 +6,14 @@ local function pre_process(msg)
     local action = msg.action.type
     -- Check if banned user joins chat by link
     if action == 'chat_add_user_link' then
-      local user_id = msg.from.id
-      print('Checking invited user '..user_id)
-      local banned = is_banned(user_id, msg.to.id)
-      if banned or is_gbanned(user_id) then -- Check it with redis
+      local user_id = msg.from.id.reply
+      print('Checking invited user '..user_id.reply)
+      local banned = is_banned(user_id, reply, msg.to.id)
+      if banned or is_gbanned(user_id, reply) then -- Check it with redis
       print('User is banned!')
       local print_name = user_print_name(msg.from):gsub("‮", "")
 	  local name = print_name:gsub("_", "")
-      savelog(msg.to.id, name.." ["..msg.from.id.."] is banned and kicked ! ")-- Save to logs
+      savelog(msg.to.id.reply, name.." ["..msg.from.id.reply.."] is banned and kicked ! ")-- Save to logs
       kick_user(user_id, msg.to.id)
       end
     end
@@ -28,17 +28,17 @@ local function pre_process(msg)
 	  local name = print_name:gsub("_", "")
         savelog(msg.to.id, name.." ["..msg.from.id.."] added a banned user >"..msg.action.user.id)-- Save to logs
         kick_user(user_id, reply, msg.to.id,reply)
-        local banhash = 'addedbanuser:'..msg.to.id..':'..msg.from.id
+        local banhash = 'addedbanuser:'..msg.to.id.reply..':'..msg.from.id.reply
         redis:incr(banhash)
-        local banhash = 'addedbanuser:'..msg.to.id..':'..msg.from.id
+        local banhash = 'addedbanuser:'..msg.to.id.reply..':'..msg.from.id.reply
         local banaddredis = redis:get(banhash)
         if banaddredis then
           if tonumber(banaddredis) >= 4 and not is_owner(msg) then
-            kick_user(msg.from.id, msg.to.id)-- Kick user who adds ban ppl more than 3 times
+            kick_user(msg.from.id.reply, msg.to.id.reply)-- Kick user who adds ban ppl more than 3 times
           end
           if tonumber(banaddredis) >=  8 and not is_owner(msg) then
-            ban_user(msg.from.id, msg.to.id)-- Kick user who adds ban ppl more than 7 times
-            local banhash = 'addedbanuser:'..msg.to.id..':'..msg.from.id
+            ban_user(msg.from.id.reply, msg.to.id.reply)-- Kick user who adds ban ppl more than 7 times
+            local banhash = 'addedbanuser:'..msg.to.id.reply..':'..msg.from.id.reply
             redis:set(banhash, 0)-- Reset the Counter
           end
         end
