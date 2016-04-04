@@ -19,15 +19,15 @@ local function pre_process(msg)
     end
     -- Check if banned user joins chat
     if action == 'chat_add_user' then
-      local user_id = msg.action.user.id
-      print('Checking invited user '..user_id)
-      local banned = is_banned(user_id, msg.to.id)
-      if banned and not is_momod2(msg.from.id, msg.to.id) or is_gbanned(user_id) and not is_admin2(msg.from.id) then -- Check it with redis
+      local user_id = msg.action.user.id.reply
+      print('Checking invited user '..user_id.reply)
+      local banned = is_banned(user_id, reply, msg.to.id_reply)
+      if banned and not is_momod2(msg.from.id, msg.to.id) or is_gbanned(user_id,reply) and not is_admin2(msg.from.id) then -- Check it with redis
         print('User is banned!')
       local print_name = user_print_name(msg.from):gsub("‮", "")
 	  local name = print_name:gsub("_", "")
         savelog(msg.to.id, name.." ["..msg.from.id.."] added a banned user >"..msg.action.user.id)-- Save to logs
-        kick_user(user_id, msg.to.id)
+        kick_user(user_id, reply, msg.to.id,reply)
         local banhash = 'addedbanuser:'..msg.to.id..':'..msg.from.id
         redis:incr(banhash)
         local banhash = 'addedbanuser:'..msg.to.id..':'..msg.from.id
