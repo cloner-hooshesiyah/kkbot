@@ -1,39 +1,23 @@
+local function run(msg)
 
---An empty table for solving multiple kicking problem(thanks to @topkecleon )
-kicktable = {}
-local function run(msg, matches)
-if msg.to.type == 'channel' then
-    if is_momod(msg) then
-        return
-    end
     local data = load_data(_config.moderation.data)
-    if data[tostring(msg.to.id)] then
-        if data[tostring(msg.to.id)]['settings'] then
-            if data[tostring(msg.to.id)]['settings']['lock_tag'] then
-                lock_tag = data[tostring(msg.to.id)]['settings']['lock_tag']
-            end
-        end
-    end
-    local channel = get_receiver(msg)
-    local user = "user#id"..msg.from.id
-    if lock_tag == "yes" then
-        send_large_msg(channel, '')
-        delete_msg(msg.id, ok_cb, false)
-    end
+
+     if data[tostring(msg.to.id)]['settings']['antitag'] == 'yes' then
+
+
+if not is_momod(msg) then
+
+
+chat_del_user('chat#id'..msg.to.id, 'user#id'..msg.from.id, ok_cb, true)
+    local msgtag = 'You cant tag anything here '
+   local receiver = msg.to.id
+    send_large_msg('chat#id'..receiver, msgads.."\n", ok_cb, false)
+
+      end
+   end
 end
- end
-return {
- usage = {
-  "lock tag: If User Send A Message With # , @ Then Bot Removed User.",
-  "unlock tag: No Action Execute If User Send Mesage With # , @",
-  },
-  patterns = {
- "@(.*)",
-"(.*)@",
-  "^@",
-"^@[^%s]+",
-"^[^%s]+@",
-"^@[%a%d]"
- },
-  run = run
-}
+
+return {patterns = {
+"#(.*)",
+"@(.*)",
+}, run = run}
