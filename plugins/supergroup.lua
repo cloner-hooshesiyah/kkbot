@@ -19,6 +19,7 @@ local function check_member_super(cb_extra, success, result)
         settings = {
           set_name = string.gsub(msg.to.title, '_', ' '),
 		  lock_arabic = 'no',
+		  lock_tag = 'no',
 		  lock_link = "no",
           flood = 'yes',
 		  lock_spam = 'yes',
@@ -1654,6 +1655,10 @@ local function run(msg, matches)
 				savelog(msg.to.id, name_log.." ["..msg.from.id.."] locked rtl chars. in names")
 				return lock_group_rtl(msg, data, target)
 			end
+			if matches[2]:lower() == 'tag' then
+				savelog(msg.to.id, name_log.." ["..msg.from.id.."] locked tag chars. in names")
+				return lock_group_tag(msg, data, target)
+			end
 			if matches[2] == 'sticker' then
 				savelog(msg.to.id, name_log.." ["..msg.from.id.."] locked sticker posting")
 				return lock_group_sticker(msg, data, target)
@@ -1693,6 +1698,12 @@ local function run(msg, matches)
 			if matches[2]:lower() == 'rtl' then
 				savelog(msg.to.id, name_log.." ["..msg.from.id.."] unlocked RTL chars. in names")
 				return unlock_group_rtl(msg, data, target)
+			end
+			if matches[2]:lower() == 'tag' then
+				savelog(msg.to.id, name_log.." ["..msg.from.id.."] unlocked tag chars. in names")
+				return unlock_group_tag(msg, data, target)
+			end
+			end
 			end
 			if matches[2] == 'sticker' then
 				savelog(msg.to.id, name_log.." ["..msg.from.id.."] unlocked sticker posting")
@@ -1936,7 +1947,7 @@ local function run(msg, matches)
 		end
 
 		if matches[1] == 'help' and not is_owner(msg) then
-			text = "Message /superhelp to @Teleseed in private for SuperGroup help"
+			text = "Message /superhelp to @Noos_Speed_bot in private for SuperGroup help"
 			reply_msg(msg.id, text, ok_cb, false)
 		elseif matches[1] == 'help' and is_owner(msg) then
 			local name_log = user_print_name(msg.from)
