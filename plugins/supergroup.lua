@@ -19,7 +19,6 @@ local function check_member_super(cb_extra, success, result)
         settings = {
           set_name = string.gsub(msg.to.title, '_', ' '),
 		  lock_arabic = 'no',
-		  lock_tag = 'no',
 		  lock_link = "no",
           flood = 'yes',
 		  lock_spam = 'yes',
@@ -27,6 +26,7 @@ local function check_member_super(cb_extra, success, result)
 		  member = 'no',
 		  public = 'no',
 		  lock_rtl = 'no',
+		  lock_tgservice = 'yes',
 		  lock_contacts = 'no',
 		  strict = 'no'
         }
@@ -344,31 +344,31 @@ local function unlock_group_rtl(msg, data, target)
   end
 end
 
-local function lock_group_tag(msg, data, target)
+local function lock_group_tgservice(msg, data, target)
   if not is_momod(msg) then
     return
   end
-  local group_tag_lock = data[tostring(target)]['settings']['lock_tag']
-  if group_tag_lock == 'yes' then
-    return 'tag is already locked'
+  local group_tgservice_lock = data[tostring(target)]['settings']['lock_tgservice']
+  if group_tgservice_lock == 'yes' then
+    return 'Tgservice is already locked'
   else
-    data[tostring(target)]['settings']['lock_tag'] = 'yes'
+    data[tostring(target)]['settings']['lock_tgservice'] = 'yes'
     save_data(_config.moderation.data, data)
-    return 'tag has been locked'
+    return 'Tgservice has been locked'
   end
 end
 
-local function unlock_group_tag(msg, data, target)
+local function unlock_group_tgservice(msg, data, target)
   if not is_momod(msg) then
     return
   end
-  local group_tag_lock = data[tostring(target)]['settings']['lock_tag']
-  if group_tag_lock == 'no' then
-    return 'RTL is already unlocked'
+  local group_tgservice_lock = data[tostring(target)]['settings']['lock_tgservice']
+  if group_tgservice_lock == 'no' then
+    return 'TgService Is Not Locked!'
   else
-    data[tostring(target)]['settings']['lock_tag'] = 'no'
+    data[tostring(target)]['settings']['lock_tgservice'] = 'no'
     save_data(_config.moderation.data, data)
-    return 'tag has been unlocked'
+    return 'Tgservice has been unlocked'
   end
 end
 
@@ -404,7 +404,7 @@ local function lock_group_contacts(msg, data, target)
   if not is_momod(msg) then
     return
   end
-  local group_rtl_lock = data[tostring(target)]['settings']['lock_contacts']
+  local group_contacts_lock = data[tostring(target)]['settings']['lock_contacts']
   if group_contacts_lock == 'yes' then
     return 'Contact posting is already locked'
   else
@@ -543,6 +543,11 @@ function show_supergroup_settingsmod(msg, target)
 		if not data[tostring(target)]['settings']['lock_rtl'] then
 			data[tostring(target)]['settings']['lock_rtl'] = 'no'
 		end
+end
+      if data[tostring(target)]['settings'] then
+		if not data[tostring(target)]['settings']['lock_tgservice'] then
+			data[tostring(target)]['settings']['lock_tgservice'] = 'no'
+		end
 	end
 	if data[tostring(target)]['settings'] then
 		if not data[tostring(target)]['settings']['lock_member'] then
@@ -550,7 +555,7 @@ function show_supergroup_settingsmod(msg, target)
 		end
 	end
   local settings = data[tostring(target)]['settings']
-  local text = "SuperGroup settings:\nLock links : "..settings.lock_link.."\nLock flood: "..settings.flood.."\nFlood sensitivity : "..NUM_MSG_MAX.."\nLock spam: "..settings.lock_spam.."\nLock Arabic: "..settings.lock_arabic.."\nLock Member: "..settings.lock_member.."\nLock RTL: "..settings.lock_rtl.."\nLock sticker: "..settings.lock_sticker.."\nPublic: "..settings.public.."\nStrict settings: "..settings.strict
+  local text = "SuperGroup settings:\nLock links : "..settings.lock_link.."\nLock flood: "..settings.flood.."\nFlood sensitivity : "..NUM_MSG_MAX.."\nLock spam: "..settings.lock_spam.."\nLock Arabic: "..settings.lock_arabic.."\nLock Member: "..settings.lock_member.."\nLock RTL: "..settings.lock_rtl.."\nLock Tgservice : "..settings.lock_tgservice.."\nLock sticker: "..settings.lock_sticker.."\nPublic: "..settings.public.."\nStrict settings: "..settings.strict
   return text
 end
 
@@ -1655,9 +1660,9 @@ local function run(msg, matches)
 				savelog(msg.to.id, name_log.." ["..msg.from.id.."] locked rtl chars. in names")
 				return lock_group_rtl(msg, data, target)
 			end
-			if matches[2]:lower() == 'tag' then
-				savelog(msg.to.id, name_log.." ["..msg.from.id.."] locked tag chars. in names")
-				return lock_group_tag(msg, data, target)
+			if matches[2] == 'tgservice' then
+				savelog(msg.to.id, name_log.." ["..msg.from.id.."] locked Tgservice Actions")
+				return lock_group_tgservice(msg, data, target)
 			end
 			if matches[2] == 'sticker' then
 				savelog(msg.to.id, name_log.." ["..msg.from.id.."] locked sticker posting")
@@ -1699,11 +1704,9 @@ local function run(msg, matches)
 				savelog(msg.to.id, name_log.." ["..msg.from.id.."] unlocked RTL chars. in names")
 				return unlock_group_rtl(msg, data, target)
 			end
-			if matches[2]:lower() == 'tag' then
-				savelog(msg.to.id, name_log.." ["..msg.from.id.."] unlocked tag chars. in names")
-				return unlock_group_tag(msg, data, target)
-			end
-			end
+				if matches[2] == 'tgservice' then
+				savelog(msg.to.id, name_log.." ["..msg.from.id.."] unlocked tgservice actions")
+				return unlock_group_tgservice(msg, data, target)
 			end
 			if matches[2] == 'sticker' then
 				savelog(msg.to.id, name_log.." ["..msg.from.id.."] unlocked sticker posting")
@@ -1947,7 +1950,7 @@ local function run(msg, matches)
 		end
 
 		if matches[1] == 'help' and not is_owner(msg) then
-			text = "Message /superhelp to @Noos_Speed_bot in private for SuperGroup help"
+			text = "Message /superhelp to @Teleseed in private for SuperGroup help"
 			reply_msg(msg.id, text, ok_cb, false)
 		elseif matches[1] == 'help' and is_owner(msg) then
 			local name_log = user_print_name(msg.from)
@@ -2014,57 +2017,57 @@ end
 
 return {
   patterns = {
-	"^[!/#]([Aa]dd)$",
-	"^[!/#]([Rr]em)$",
-	"^[!/#]([Mm]ove) (.*)$",
-	"^[!/#]([Ii]nfo)$",
-	"^[!/#]([Aa]dmins)$",
-	"^[!/#]([Oo]wner)$",
-	"^[!/#]([Mm]odlist)$",
-	"^[!/#]([Bb]ots)$",
-	"^[!/#]([Ww]ho)$",
-	"^[!/#]([Kk]icked)$",
-    "^[!/#]([Bb]lock) (.*)",
-	"^[!/#]([Bb]lock)",
-	"^[!/#]([Tt]osuper)$",
-	"^[!/#]([Ii][Dd])$",
-	"^[!/#]([Ii][Dd]) (.*)$",
-	"^[!/#]([Kk]ickme)$",
-	"^[!/#]([Kk]ick) (.*)$",
-	"^[!/#]([Nn]ewlink)$",
-	"^[!/#]([Ss]etlink)$",
-	"^[!/#]([Ll]ink)$",
-	"^[!/#]([Rr]es) (.*)$",
-	"^[!/#]([Ss]etadmin) (.*)$",
-	"^[!/#]([Ss]etadmin)",
-	"^[!/#]([Dd]emoteadmin) (.*)$",
-	"^[!/#]([Dd]emoteadmin)",
-	"^[!/#]([Ss]etowner) (.*)$",
-	"^[!/#]([Ss]etowner)$",
-	"^[!/#]([Pp]romote) (.*)$",
-	"^[!/#]([Pp]romote)",
-	"^[!/#]([Dd]emote) (.*)$",
-	"^[!/#]([Dd]emote)",
-	"^[!/#]([Ss]etname) (.*)$",
-	"^[!/#]([Ss]etabout) (.*)$",
-	"^[!/#]([Ss]etrules) (.*)$",
-	"^[!/#]([Ss]etphoto)$",
-	"^[!/#]([Ss]etusername) (.*)$",
-	"^[!/#]([Dd]el)$",
-	"^[!/#]([Ll]ock) (.*)$",
-	"^[!/#]([Uu]nlock) (.*)$",
-	"^[!/#]([Mm]ute) ([^%s]+)$",
-	"^[!/#]([Uu]nmute) ([^%s]+)$",
-	"^[!/#]([Mm]uteuser)$",
-	"^[!/#]([Mm]uteuser) (.*)$",
-	"^[!/#]([Pp]ublic) (.*)$",
-	"^[!/#]([Ss]ettings)$",
-	"^[!/#]([Rr]ules)$",
-	"^[!/#]([Ss]etflood) (%d+)$",
-	"^[!/#]([Cc]lean) (.*)$",
-	"^[!/#]([Hh]elp)$",
-	"^[!/#]([Mm]uteslist)$",
-	"^[!/#]([Mm]utelist)$",
+	"^[#!/]([Aa]dd)$",
+	"^[#!/]([Rr]em)$",
+	"^[#!/]([Mm]ove) (.*)$",
+	"^[#!/]([Ii]nfo)$",
+	"^[#!/]([Aa]dmins)$",
+	"^[#!/]([Oo]wner)$",
+	"^[#!/]([Mm]odlist)$",
+	"^[#!/]([Bb]ots)$",
+	"^[#!/]([Ww]ho)$",
+	"^[#!/]([Kk]icked)$",
+        "^[#!/]([Bb]lock) (.*)",
+	"^[#!/]([Bb]lock)",
+	"^[#!/]([Tt]osuper)$",
+	"^[#!/]([Ii][Dd])$",
+	"^[#!/]([Ii][Dd]) (.*)$",
+	"^[#!/]([Kk]ickme)$",
+	"^[#!/]([Kk]ick) (.*)$",
+	"^[#!/]([Nn]ewlink)$",
+	"^[#!/]([Ss]etlink)$",
+	"^[#!/]([Ll]ink)$",
+	"^[#!/]([Rr]es) (.*)$",
+	"^[#!/]([Ss]etadmin) (.*)$",
+	"^[#!/]([Ss]etadmin)",
+	"^[#!/]([Dd]emoteadmin) (.*)$",
+	"^[#!/]([Dd]emoteadmin)",
+	"^[#!/]([Ss]etowner) (.*)$",
+	"^[#!/]([Ss]etowner)$",
+	"^[#!/]([Pp]romote) (.*)$",
+	"^[#!/]([Pp]romote)",
+	"^[#!/]([Dd]emote) (.*)$",
+	"^[#!/]([Dd]emote)",
+	"^[#!/]([Ss]etname) (.*)$",
+	"^[#!/]([Ss]etabout) (.*)$",
+	"^[#!/]([Ss]etrules) (.*)$",
+	"^[#!/]([Ss]etphoto)$",
+	"^[#!/]([Ss]etusername) (.*)$",
+	"^[#!/]([Dd]el)$",
+	"^[#!/]([Ll]ock) (.*)$",
+	"^[#!/]([Uu]nlock) (.*)$",
+	"^[#!/]([Mm]ute) ([^%s]+)$",
+	"^[#!/]([Uu]nmute) ([^%s]+)$",
+	"^[#!/]([Mm]uteuser)$",
+	"^[#!/]([Mm]uteuser) (.*)$",
+	"^[#!/]([Pp]ublic) (.*)$",
+	"^[#!/]([Ss]ettings)$",
+	"^[#!/]([Rr]ules)$",
+	"^[#!/]([Ss]etflood) (%d+)$",
+	"^[#!/]([Cc]lean) (.*)$",
+	"^[#!/]([Hh]elp)$",
+	"^[#!/]([Mm]uteslist)$",
+	"^[#!/]([Mm]utelist)$",
     "[#!/](mp) (.*)",
 	"[#!/](md) (.*)",
     "^(https://telegram.me/joinchat/%S+)$",
