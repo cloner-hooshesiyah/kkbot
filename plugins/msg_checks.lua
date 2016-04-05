@@ -23,6 +23,11 @@ if is_chat_msg(msg) or is_super_group(msg) then
 	else
 		lock_rtl = 'no'
 	end
+	if settings.lock_tag then
+		lock_tag = settings.lock_tag
+	else
+		lock_tag = 'no'
+	end
 	if settings.lock_link then
 		lock_link = settings.lock_link
 	else
@@ -56,7 +61,7 @@ if is_chat_msg(msg) or is_super_group(msg) then
 		if msg and not msg.service and is_muted(msg.to.id, 'All: yes') or is_muted_user(msg.to.id, msg.from.id) and not msg.service then
 			delete_msg(msg.id, ok_cb, false)
 			if to_chat then
-			--	kick_user(msg.from.id, msg.to.id)
+			--	kick_user(msg.from.id.reply, msg.to.id)
 			end
 		end
 		if msg.text then -- msg.text checks
@@ -153,7 +158,13 @@ if is_chat_msg(msg) or is_super_group(msg) then
 					if strict == "yes" or to_chat then
 						kick_user(msg.from.id, msg.to.id)
 					end
-				end
+			end
+			local is_username_caption = msg.media.caption:match("^@,#")
+				if is_username_caption and lock_tag == "yes" then
+					delete_msg(msg.id, ok_cb, false)
+					if strict == "yes" or to_chat then
+						kick_user(msg.from.id, msg.to.id)
+					end
 				if lock_sticker == "yes" and msg.media.caption:match("sticker.webp") then
 					delete_msg(msg.id, ok_cb, false)
 					if strict == "yes" or to_chat then
