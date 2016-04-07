@@ -321,109 +321,67 @@ This command will send text to [group_id]
 
 ]],
     help_text = [[
-Commands list :
+❕راهنما❕
 
-!kick [username|id]
-You can also do it by reply
+🌟برای پاک کردن کسی از گروه از دستور /kick استفاده کنید
+ابتدا دستور /kick را توشته و سپس یک فاصله بگذارید و بعد ایدی طرف مورد نظر را بنویسید
 
-!ban [ username|id]
-You can also do it by reply
+🌟برای اینکه کسی نتوتند پس از اینکه پاک شد مجددا با لینک یا روش دیگری وارد گروه شود دستور /ban را بزنید 
+ابتدا دستور /ban را توشته و سپس یک فاصله بگذارید و بعد ایدی طرف مورد نظر را بنویسید
 
-!unban [id]
-You can also do it by reply
+🌟برای بیرون اوردن از بن از دستور /unban استفاده نمایید
+ابتدا دستور /unban را توشته و سپس یک فاصله بگذارید و بعد ایدی طرف مورد نظر را بنویسید
 
-!who
-Members list
+🌟برای نمایش ایدی های عددی اعضای گروه از دستور /who استفاده نمایید
+کاربرد:اگر شخصی را بخواهید کیک کنید اما ایدی نداشته باشد میتوانید با ایدی عددی اورا کیک کنید
 
-!modlist
-Moderators list
+🌟برای نمایش تعداد مدیران ربات از دستور /modlist استفاده نمایید
 
-!promote [username]
-Promote someone
+🌟برای مدیر کردن کسی در ربات از دستور /promote استفاده نمایید
+ابتدا دستور /promote را توشته و سپس یک فاصله بگذارید و بعد ایدی طرف مورد نظر را بنویسید
+یا رو پیام طرف مورد نظر تایپ کنید و دستور را بزنید
 
-!demote [username]
-Demote someone
+🌟برای خارج کردن کسی از مدیریت ربات  از دستور /demote استفاده نمایید
+ابتدا دستور /demote را توشته و سپس یک فاصله بگذارید و بعد ایدی طرف مورد نظر را بنویسید
+یا رو پیام طرف مورد نظر تایپ کنید و دستور را بزنید
 
-!kickme
-Will kick user
+🌟برای تنظیم عکس برای گروه از دستور setphoto/ استفاده نمایید
+سپس عکس مورد نظر را در گروه بفرستید
 
-!about
-Group description
+🌟برای تنظیم اسم گروه از دستور setname/ استفاده نمایید
+/setname نام گروه
 
-!setphoto
-Set and locks group photo
+🌟برای دریافت ایدی خود یا گروه /id را بزنید
+برای دریافت ایدی خود ریپلی کنید رو پیام
 
-!setname [name]
-Set group name
+🌟برای دریافت راهنما /help بزنید
 
-!rules
-Group rules
+🌟برای قفل کردن اعضا /lock member  قفل لفت دادن /lock leave اگر گسی لفت دهد بن میشود
 
-!id
-Return group id or user id
+🌟برای باز کردن قفل ها /unlock
 
-!help
-Get commands list
+🌟برای دریافت تنظیمات گروه /settings
 
-!lock [member|name|bots|leave] 
-Locks [member|name|bots|leaveing] 
+🌟برای ساخت لینک جدید /newlink  برای دریافت لینک گروه /link
 
-!unlock [member|name|bots|leave]
-Unlocks [member|name|bots|leaving]
+🌟برای پیدا کردن صاجب گروه /owner
 
-!set rules [text]
-Set [text] as rules
+🌟برای صاحب کردن کسی /setowner
+نکته : اگر کسی را صاحب کنید خودتان دیگر صاحب نحواهید بود!!
 
-!set about [text]
-Set [text] as about
+🌟برای تنظیم اسپم /setflood 5 بجای 5 عدید دلخواه خودتان را بگذارید
+اگر 5 باشد اگر کسی بیشتر از 5 تا پیام پشت سر هم بدهد کیک میشود
 
-!settings
-Returns group settings
+🌟برای دریافت اطلاعات /res username بجای یوزر ایدی طرف مورد نظر را بنویسید
 
-!newlink
-Create/revoke your group link
+🌟برای اینکه کسی نتواند لینک بفرستید /lock links
+دستور /muteslist را بزنید انواع موت هارو میاره عکس ویس گیف برنامه که برای موتشان فقط /mute به اولشان اضافه کنید مانند
+/mute photo
 
-!link
-Returns group link
+🌟برای دریافت ادمین های سوپر گروه /admins را بزنید
+برای ادمین کردن کسی ابتدا ریپلی کنید سپس /setadmin بزنید
 
-!owner
-Returns group owner id
-
-!setowner [id]
-Will set id as owner
-
-!setflood [value]
-Set [value] as flood sensitivity
-
-!stats
-Simple message statistics
-
-!save [value] [text]
-Save [text] as [value]
-
-!get [value]
-Returns text of [value]
-
-!clean [modlist|rules|about]
-Will clear [modlist|rules|about] and set it to nil
-
-!res [username]
-Returns user id
-
-!log
-Will return group logs
-
-!banlist
-Will return group ban list
-
-» U can use both "/" and "!" 
-
-» Only mods, owner and admin can add bots in group
-
-» Only moderators and owner can use kick,ban,unban,newlink,link,setphoto,setname,lock,unlock,set rules,set about and settings commands
-
-» Only owner can use res,setowner,promote,demote and log commands
-
+برای بلاک کردن /block بزنید
 ]]
   }
   serialize_to_file(config, './data/config.lua')
