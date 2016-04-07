@@ -293,187 +293,67 @@ This command will send text to [group_id]
 *Only admins and sudo can use res, setowner, commands
 ]],
     help_text = [[
-Commands list :
-!kick [username|id]
-You can also do it by reply
-!ban [ username|id]
-You can also do it by reply
-!unban [id]
-You can also do it by reply
-!who
-Members list
-!modlist
-Moderators list
-!promote [username]
-Promote someone
-!demote [username]
-Demote someone
-!kickme
-Will kick user
-!about
-Group description
-!setphoto
-Set and locks group photo
-!setname [name]
-Set group name
-!rules
-Group rules
-!id
-return group id or user id
-!help
-Returns help text
-!lock [links|flood|spam|Arabic|member|rtl|sticker|contacts|strict]
-Lock group settings
-*rtl: Kick user if Right To Left Char. is in name*
-!unlock [links|flood|spam|Arabic|member|rtl|sticker|contacts|strict]
-Unlock group settings
-*rtl: Kick user if Right To Left Char. is in name*
-!mute [all|audio|gifs|photo|video]
-mute group message types
-*If "muted" message type: user is kicked if message type is posted 
-!unmute [all|audio|gifs|photo|video]
-Unmute group message types
-*If "unmuted" message type: user is not kicked if message type is posted 
-!set rules <text>
-Set <text> as rules
-!set about <text>
-Set <text> as about
-!settings
-Returns group settings
-!muteslist
-Returns mutes for chat
-!muteuser [username]
-Mute a user in chat
-*user is kicked if they talk
-*only owners can mute | mods and owners can unmute
-!mutelist
-Returns list of muted users in chat
-!newlink
-create/revoke your group link
-!link
-returns group link
-!owner
-returns group owner id
-!setowner [id]
-Will set id as owner
-!setflood [value]
-Set [value] as flood sensitivity
-!stats
-Simple message statistics
-!save [value] <text>
-Save <text> as [value]
-!get [value]
-Returns text of [value]
-!clean [modlist|rules|about]
-Will clear [modlist|rules|about] and set it to nil
-!res [username]
-returns user id
-"!res @username"
-!log
-Returns group logs
-!banlist
-will return group ban list
-**You can use "#", "!", or "/" to begin all commands
-*Only owner and mods can add bots in group
-*Only moderators and owner can use kick,ban,unban,newlink,link,setphoto,setname,lock,unlock,set rules,set about and settings commands
-*Only owner can use res,setowner,promote,demote and log commands
-]],
-	help_text_super =[[
-SuperGroup Commands:
-!info
-Displays general info about the SuperGroup
-!admins
-Returns SuperGroup admins list
-!owner
-Returns group owner
-!modlist
-Returns Moderators list
-!bots
-Lists bots in SuperGroup
-!who
-Lists all users in SuperGroup
-!block
-Kicks a user from SuperGroup
-*Adds user to blocked list*
-!ban
-Bans user from the SuperGroup
-!unban
-Unbans user from the SuperGroup
-!id
-Return SuperGroup ID or user id
-*For userID's: !id @username or reply !id*
-!id from
-Get ID of user message is forwarded from
-!kickme
-Kicks user from SuperGroup
-*Must be unblocked by owner or use join by pm to return*
-!setowner
-Sets the SuperGroup owner
-!promote [username|id]
-Promote a SuperGroup moderator
-!demote [username|id]
-Demote a SuperGroup moderator
-!setname
-Sets the chat name
-!setphoto
-Sets the chat photo
-!setrules
-Sets the chat rules
-!setabout
-Sets the about section in chat info(members list)
-!save [value] <text>
-Sets extra info for chat
-!get [value]
-Retrieves extra info for chat by value
-!newlink
-Generates a new group link
-!link
-Retireives the group link
-!rules
-Retrieves the chat rules
-!lock [links|flood|spam|Arabic|member|rtl|sticker|contacts|strict]
-Lock group settings
-*rtl: Delete msg if Right To Left Char. is in name*
-*strict: enable strict settings enforcement (violating user will be kicked)*
-!unlock [links|flood|spam|Arabic|member|rtl|sticker|contacts|strict]
-Unlock group settings
-*rtl: Delete msg if Right To Left Char. is in name*
-*strict: disable strict settings enforcement (violating user will not be kicked)*
-!mute [all|audio|gifs|photo|video|service]
-mute group message types
-*A "muted" message type is auto-deleted if posted
-!unmute [all|audio|gifs|photo|video|service]
-Unmute group message types
-*A "unmuted" message type is not auto-deleted if posted
-!setflood [value]
-Set [value] as flood sensitivity
-!settings
-Returns chat settings
-!muteslist
-Returns mutes for chat
-!muteuser [username]
-Mute a user in chat
-*If a muted user posts a message, the message is deleted automaically
-*only owners can mute | mods and owners can unmute
-!mutelist
-Returns list of muted users in chat
-!banlist
-Returns SuperGroup ban list
-!clean [rules|about|modlist|mutelist]
-!del
-Deletes a message by reply
-!public [yes|no]
-Set chat visibility in pm !chats or !chatlist commands
-!res [username]
-Returns users name and id by username
-!log
-Returns group logs
-*Search for kick reasons using [#RTL|#spam|#lockmember]
-**You can use "#", "!", or "/" to begin all commands
-*Only owner can add members to SuperGroup
-(use invite link to invite)
-*Only moderators and owner can use block, ban, unban, newlink, link, setphoto, setname, lock, unlock, setrules, setabout and settings commands
-*Only owner can use res, setowner, promote, demote, and log commands
+❕راهنما❕
+
+🌟برای پاک کردن کسی از گروه از دستور /kick استفاده کنید
+ابتدا دستور /kick را توشته و سپس یک فاصله بگذارید و بعد ایدی طرف مورد نظر را بنویسید
+
+🌟برای اینکه کسی نتوتند پس از اینکه پاک شد مجددا با لینک یا روش دیگری وارد گروه شود دستور /ban را بزنید 
+ابتدا دستور /ban را توشته و سپس یک فاصله بگذارید و بعد ایدی طرف مورد نظر را بنویسید
+
+🌟برای بیرون اوردن از بن از دستور /unban استفاده نمایید
+ابتدا دستور /unban را توشته و سپس یک فاصله بگذارید و بعد ایدی طرف مورد نظر را بنویسید
+
+🌟برای نمایش ایدی های عددی اعضای گروه از دستور /who استفاده نمایید
+کاربرد:اگر شخصی را بخواهید کیک کنید اما ایدی نداشته باشد میتوانید با ایدی عددی اورا کیک کنید
+
+🌟برای نمایش تعداد مدیران ربات از دستور /modlist استفاده نمایید
+
+🌟برای مدیر کردن کسی در ربات از دستور /promote استفاده نمایید
+ابتدا دستور /promote را توشته و سپس یک فاصله بگذارید و بعد ایدی طرف مورد نظر را بنویسید
+یا رو پیام طرف مورد نظر تایپ کنید و دستور را بزنید
+
+🌟برای خارج کردن کسی از مدیریت ربات  از دستور /demote استفاده نمایید
+ابتدا دستور /demote را توشته و سپس یک فاصله بگذارید و بعد ایدی طرف مورد نظر را بنویسید
+یا رو پیام طرف مورد نظر تایپ کنید و دستور را بزنید
+
+🌟برای تنظیم عکس برای گروه از دستور setphoto/ استفاده نمایید
+سپس عکس مورد نظر را در گروه بفرستید
+
+🌟برای تنظیم اسم گروه از دستور setname/ استفاده نمایید
+/setname نام گروه
+
+🌟برای دریافت ایدی خود یا گروه /id را بزنید
+برای دریافت ایدی خود ریپلی کنید رو پیام
+
+🌟برای دریافت راهنما /help بزنید
+
+🌟برای قفل کردن اعضا /lock member  قفل لفت دادن /lock leave اگر گسی لفت دهد بن میشود
+
+🌟برای باز کردن قفل ها /unlock
+
+🌟برای دریافت تنظیمات گروه /settings
+
+🌟برای ساخت لینک جدید /newlink  برای دریافت لینک گروه /link
+
+🌟برای پیدا کردن صاجب گروه /owner
+
+🌟برای صاحب کردن کسی /setowner
+نکته : اگر کسی را صاحب کنید خودتان دیگر صاحب نحواهید بود!!
+
+🌟برای تنظیم اسپم /setflood 5 بجای 5 عدید دلخواه خودتان را بگذارید
+اگر 5 باشد اگر کسی بیشتر از 5 تا پیام پشت سر هم بدهد کیک میشود
+
+🌟برای دریافت اطلاعات /res username بجای یوزر ایدی طرف مورد نظر را بنویسید
+
+🌟برای اینکه کسی نتواند لینک بفرستید /lock links
+دستور /muteslist را بزنید انواع موت هارو میاره عکس ویس گیف برنامه که برای موتشان فقط /mute به اولشان اضافه کنید مانند
+/mute photo
+
+🌟برای دریافت ادمین های سوپر گروه /admins را بزنید
+برای ادمین کردن کسی ابتدا ریپلی کنید سپس /setadmin بزنید
+
+برای بلاک کردن /block بزنید
 ]],
   }
   serialize_to_file(config, './data/config.lua')
