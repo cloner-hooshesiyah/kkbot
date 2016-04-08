@@ -293,7 +293,22 @@ This command will send text to [group_id]
 *Only admins and sudo can use res, setowner, commands
 ]],
     help_text = [[
-iiiiiiiii
+Supper Group Command:
+
+!info
+🔺مشخصات فرد با ریپلای کردن
+!myinfo
+🔺مشخصات خود
+!myid
+🔺تلگرام ایدی خود
+!echo [text]
+🔺بات نوشته شما را مینویسد
+!echo> [filename].[format] [text]
+🔺ساخت فایل
+!voice [text]
+🔺ساخت وُیس با متن
+!all
+🔺امار کل سوپر گروه شما
 ]],
   }
   serialize_to_file(config, './data/config.lua')
